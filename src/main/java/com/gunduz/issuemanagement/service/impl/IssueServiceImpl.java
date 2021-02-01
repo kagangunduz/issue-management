@@ -41,7 +41,8 @@ public class IssueServiceImpl implements IssueService {
 
     @Override
     public IssueDto getById(Long id) {
-        return null;
+       Issue issue = issueRepository.getOne(id);
+       return modelMapper.map(issue, IssueDto.class);
     }
 
     @Override
@@ -53,9 +54,20 @@ public class IssueServiceImpl implements IssueService {
         return page;
     }
 
+    public IssueDto update(Long id, IssueDto issueDto) {
+        Issue issueDb = issueRepository.getOne(id);
+
+        if (issueDb == null) {
+            throw new IllegalArgumentException("Issue does not exist. ID: " + id);
+        }
+
+        return modelMapper.map(issueDb, IssueDto.class);
+    }
+
     @Override
-    public Boolean delete(IssueDto issue) {
-        return null;
+    public Boolean delete(Long id) {
+        issueRepository.deleteById(id);
+        return true;
     }
 
 }

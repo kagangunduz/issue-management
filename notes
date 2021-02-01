@@ -1,0 +1,1 @@
+insert into project (id, project_name, project_code) values (55, 'Test Project', 'TP001');
