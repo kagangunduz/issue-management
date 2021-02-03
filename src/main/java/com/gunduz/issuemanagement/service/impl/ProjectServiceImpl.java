@@ -4,12 +4,14 @@ import com.gunduz.issuemanagement.dto.ProjectDto;
 import com.gunduz.issuemanagement.entity.Project;
 import com.gunduz.issuemanagement.repository.ProjectRepository;
 import com.gunduz.issuemanagement.service.ProjectService;
+import com.gunduz.issuemanagement.util.TPage;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -45,20 +47,15 @@ public class ProjectServiceImpl implements ProjectService {
         return modelMapper.map(project, ProjectDto.class);
     }
 
-    @Override
-    public ProjectDto getByProjectCode(String projectCode) {
-        return null;
-    }
 
     @Override
-    public List<Project> getByProjectCodeContains(String projectCode) {
-        return null;
+    public TPage<ProjectDto> getAllPageable(Pageable pageable) {
+        Page<Project> data = projectRepository.findAll(pageable);
+        TPage<ProjectDto> response = new TPage<ProjectDto>();
+        response.setStat(data, Arrays.asList(modelMapper.map(data.getContent(), ProjectDto[].class)));
+        return response;
     }
 
-    @Override
-    public Page<Project> getAllPageable(Pageable pageable) {
-        return projectRepository.findAll(pageable);
-    }
 
     @Override
     public ProjectDto update(Long id, ProjectDto projectDto) {
@@ -80,12 +77,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.save(projectDb);
         return modelMapper.map(projectDb, ProjectDto.class);
-    }
-
-
-    @Override
-    public Boolean delete(ProjectDto projectDto) {
-        return false;
     }
 
 
